@@ -1,25 +1,31 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  selectUser,
+  selectUpdateError,
+  updateUser
+} from '../../services/slices/user';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const user = useSelector(selectUser);
+  const updateError = useSelector(selectUpdateError);
+  const dispatch = useDispatch();
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name || '',
+    email: user?.email || '',
     password: ''
   });
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
+    if (user) {
+      setFormValue((prevState) => ({
+        ...prevState,
+        name: user.name || '',
+        email: user.email || ''
+      }));
+    }
   }, [user]);
 
   const isFormChanged =
@@ -29,13 +35,20 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    const updateData: { name?: string; email?: string; password?: string } = {};
+    if (formValue.name !== user?.name) updateData.name = formValue.name;
+    if (formValue.email !== user?.email) updateData.email = formValue.email;
+    if (formValue.password) updateData.password = formValue.password;
+    dispatch(updateUser(updateData)).then(() => {
+      setFormValue((prev) => ({ ...prev, password: '' }));
+    });
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
   };
@@ -54,8 +67,7 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      updateUserError={updateError || ''}
     />
   );
-
-  return null;
 };
