@@ -2,11 +2,7 @@ import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { FC, useCallback, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
-import {
-  selectFeedOrders,
-  selectFeedTotal,
-  selectFeedTotalToday
-} from '../../services/slices/feed';
+import { selectFeedOrders } from '../../services/slices/feed';
 import {
   selectIngredients,
   fetchIngredients
@@ -19,8 +15,6 @@ const WS_URL =
 export const Feed: FC = () => {
   const dispatch = useDispatch();
   const orders = useSelector(selectFeedOrders);
-  const total = useSelector(selectFeedTotal);
-  const totalToday = useSelector(selectFeedTotalToday);
   const ingredients = useSelector(selectIngredients);
 
   // Загружаем ингредиенты, если их нет
@@ -50,12 +44,5 @@ export const Feed: FC = () => {
     return <Preloader />;
   }
 
-  return (
-    <FeedUI
-      orders={orders}
-      total={total}
-      totalToday={totalToday}
-      handleGetFeeds={handleReconnect}
-    />
-  );
+  return <FeedUI orders={orders} handleGetFeeds={handleReconnect} />;
 };
