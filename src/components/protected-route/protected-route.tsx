@@ -5,6 +5,7 @@ import {
   selectIsAuthChecked,
   selectIsAuthenticated
 } from '../../services/slices/user';
+import { Preloader } from '../ui/preloader';
 
 type TProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -20,7 +21,7 @@ export const ProtectedRoute: FC<TProtectedRouteProps> = ({
   const location = useLocation();
 
   if (!isAuthChecked) {
-    return <div style={{ minHeight: '100vh' }} />;
+    return <Preloader />;
   }
 
   if (!onlyUnAuth && !isAuthenticated) {

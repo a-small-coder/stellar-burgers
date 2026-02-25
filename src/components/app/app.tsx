@@ -22,8 +22,12 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { checkUserAuth } from '../../services/slices/user';
+import {
+  fetchIngredients,
+  selectIngredients
+} from '../../services/slices/ingredients';
 
 const ModalSwitch = () => {
   const location = useLocation();
@@ -121,9 +125,11 @@ const ModalSwitch = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='' onClose={handleCloseModal}>
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute>
+                <Modal title='' onClose={handleCloseModal}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
             }
           />
         </Routes>
@@ -134,6 +140,13 @@ const ModalSwitch = () => {
 
 const App = () => {
   const dispatch = useDispatch();
+
+  const ingredients = useSelector(selectIngredients);
+  useEffect(() => {
+    if (!ingredients.length) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
 
   useEffect(() => {
     dispatch(checkUserAuth());

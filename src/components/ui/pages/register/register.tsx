@@ -7,16 +7,15 @@ import {
 import styles from '../common.module.css';
 import { Link } from 'react-router-dom';
 import { RegisterUIProps } from './type';
+import { ErrorMessage } from '../../error-message';
 
 export const RegisterUI: FC<RegisterUIProps> = ({
   errorText,
   email,
-  setEmail,
-  handleSubmit,
   password,
-  setPassword,
   userName,
-  setUserName
+  handleSubmit,
+  handleChange
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
@@ -31,7 +30,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             <Input
               type='text'
               placeholder='Имя'
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={handleChange}
               value={userName}
               name='name'
               error={false}
@@ -43,7 +42,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             <Input
               type='email'
               placeholder='E-mail'
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
               value={email}
               name={'email'}
               error={false}
@@ -53,7 +52,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
           </div>
           <div className='pb-6'>
             <PasswordInput
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
               value={password}
               name='password'
             />
@@ -64,9 +63,9 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             </Button>
           </div>
           {errorText && (
-            <p className={`${styles.error} text text_type_main-default pb-6`}>
+            <ErrorMessage className={styles.error + ' pb-6'}>
               {errorText}
-            </p>
+            </ErrorMessage>
           )}
         </>
       </form>

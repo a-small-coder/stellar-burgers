@@ -1,28 +1,15 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { FC, useCallback, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from '../../services/store';
+import { FC, useCallback, useRef } from 'react';
+import { useSelector } from '../../services/store';
 import { selectFeedOrders } from '../../services/slices/feed';
-import {
-  selectIngredients,
-  fetchIngredients
-} from '../../services/slices/ingredients';
 import { useWebSocket } from '../../hooks/useWebSocket';
 
 const WS_URL =
   process.env.BURGER_WEBSOCKET_URL || 'wss://norma.education-services.ru';
 
 export const Feed: FC = () => {
-  const dispatch = useDispatch();
   const orders = useSelector(selectFeedOrders);
-  const ingredients = useSelector(selectIngredients);
-
-  // Загружаем ингредиенты, если их нет
-  useEffect(() => {
-    if (!ingredients || !ingredients.length) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients]);
 
   const reconnectRef = useRef<(() => void) | null>(null);
 

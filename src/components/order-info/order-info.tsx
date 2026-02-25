@@ -8,14 +8,18 @@ import { selectIngredients } from '../../services/slices/ingredients';
 import { selectFeedOrders } from '../../services/slices/feed';
 import { selectOrders } from '../../services/slices/orders';
 import { getOrderByNumberApi } from '@api';
+import { ErrorMessage } from '../ui/error-message';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
   const ingredients = useSelector(selectIngredients);
   const feedOrders = useSelector(selectFeedOrders);
   const orders = useSelector(selectOrders);
+
   const [orderData, setOrderData] = useState<TOrder | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!number) return;
@@ -38,6 +42,9 @@ export const OrderInfo: FC = () => {
       return;
     }
 
+    setError(null);
+    setNotFound(false);
+
     // Если не найдено, запрашиваем с сервера
     getOrderByNumberApi(orderNumber)
       .then((response) => {
@@ -47,10 +54,13 @@ export const OrderInfo: FC = () => {
           response.orders.length > 0
         ) {
           setOrderData(response.orders[0]);
+        } else {
+          setNotFound(true);
         }
         setLoading(false);
       })
       .catch(() => {
+        setError('Не удалось загрузить данные заказа');
         setLoading(false);
       });
   }, [number, feedOrders, orders]);
@@ -97,8 +107,16 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (loading || !orderData || !orderInfo) {
+  if (loading) {
     return <Preloader />;
+  }
+
+  if (error) {
+    return <ErrorMessage className='pt-10'>{error}</ErrorMessage>;
+  }
+
+  if (notFound || !orderData || !orderInfo) {
+    return <ErrorMessage className='pt-10'>Заказ не найден</ErrorMessage>;
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;

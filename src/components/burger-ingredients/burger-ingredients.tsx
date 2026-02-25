@@ -3,23 +3,16 @@ import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { useSelector, useDispatch } from '../../services/store';
+import { useSelector } from '../../services/store';
 import {
-  fetchIngredients,
   selectIngredients,
   selectIngredientsLoading
 } from '../../services/slices/ingredients';
+import { Preloader } from '../ui/preloader';
 
 export const BurgerIngredients: FC = () => {
-  const dispatch = useDispatch();
   const ingredients = useSelector(selectIngredients);
   const loading = useSelector(selectIngredientsLoading);
-
-  useEffect(() => {
-    if (!ingredients.length) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients.length]);
 
   const { buns, mains, sauces } = useMemo(
     () => ({
@@ -68,7 +61,7 @@ export const BurgerIngredients: FC = () => {
   };
 
   if (loading) {
-    return <div>Загрузка...</div>;
+    return <Preloader />;
   }
 
   return (

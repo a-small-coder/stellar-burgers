@@ -4,11 +4,12 @@ import { Input, Button } from '@zlden/react-developer-burger-ui-components';
 import styles from '../common.module.css';
 import { Link } from 'react-router-dom';
 import { PageUIProps } from '../common-type';
+import { ErrorMessage } from '../../error-message';
 
 export const ForgotPasswordUI: FC<PageUIProps> = ({
   errorText,
   email,
-  setEmail,
+  handleChange,
   handleSubmit
 }) => (
   <main className={styles.container}>
@@ -23,7 +24,7 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           <Input
             type='email'
             placeholder='Укажите e-mail'
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
             value={email}
             name='email'
             error={false}
@@ -37,9 +38,9 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           </Button>
         </div>
         {errorText && (
-          <p className={`${styles.error} text text_type_main-default pb-6`}>
+          <ErrorMessage className={styles.error + ' pb-6'}>
             {errorText}
-          </p>
+          </ErrorMessage>
         )}
       </form>
       <div className={`${styles.question} text text_type_main-default pb-6`}>

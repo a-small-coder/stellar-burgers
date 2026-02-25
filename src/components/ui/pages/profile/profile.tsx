@@ -6,6 +6,7 @@ import commonStyles from '../common.module.css';
 
 import { ProfileUIProps } from './type';
 import { ProfileMenu } from '@components';
+import { ErrorMessage } from '../../error-message';
 
 export const ProfileUI: FC<ProfileUIProps> = ({
   formValue,
@@ -13,7 +14,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
   updateUserError,
   handleSubmit,
   handleCancel,
-  handleInputChange
+  handleChange
 }) => (
   <main className={`${commonStyles.container}`}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
@@ -28,7 +29,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
           <Input
             type={'text'}
             placeholder={'Имя'}
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={formValue.name}
             name={'name'}
             error={false}
@@ -41,7 +42,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
           <Input
             type={'email'}
             placeholder={'E-mail'}
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={formValue.email}
             name={'email'}
             error={false}
@@ -54,7 +55,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
           <Input
             type={'password'}
             placeholder={'Пароль'}
-            onChange={handleInputChange}
+            onChange={handleChange}
             value={formValue.password}
             name={'password'}
             error={false}
@@ -79,11 +80,9 @@ export const ProfileUI: FC<ProfileUIProps> = ({
           </div>
         )}
         {updateUserError && (
-          <p
-            className={`${commonStyles.error} pt-5 text text_type_main-default`}
-          >
+          <ErrorMessage className={commonStyles.error + ' pt-5'}>
             {updateUserError}
-          </p>
+          </ErrorMessage>
         )}
       </>
     </form>
