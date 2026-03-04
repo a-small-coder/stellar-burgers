@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import { loginUser } from '../../services/slices/user';
+import { clearError, loginUser } from '../../services/slices/user';
 import {
   selectUserError,
   selectUserLoading,
@@ -26,6 +26,11 @@ export const Login: FC = () => {
   const from =
     (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
+  // сброс страой ошибки
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
   useEffect(() => {
     if (isAuthenticated && !loading && !error) {
       navigate(from, { replace: true });
@@ -44,6 +49,7 @@ export const Login: FC = () => {
       password={password}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      loading={loading}
     />
   );
 };

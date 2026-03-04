@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Input,
   Button,
@@ -15,7 +15,8 @@ export const RegisterUI: FC<RegisterUIProps> = ({
   password,
   userName,
   handleSubmit,
-  handleChange
+  handleChange,
+  loading
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
@@ -32,7 +33,7 @@ export const RegisterUI: FC<RegisterUIProps> = ({
               placeholder='Имя'
               onChange={handleChange}
               value={userName}
-              name='name'
+              name='userName'
               error={false}
               errorText=''
               size='default'
@@ -44,10 +45,10 @@ export const RegisterUI: FC<RegisterUIProps> = ({
               placeholder='E-mail'
               onChange={handleChange}
               value={email}
-              name={'email'}
+              name='email'
               error={false}
               errorText=''
-              size={'default'}
+              size='default'
             />
           </div>
           <div className='pb-6'>
@@ -58,8 +59,13 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             />
           </div>
           <div className={`pb-6 ${styles.button}`}>
-            <Button type='primary' size='medium' htmlType='submit'>
-              Зарегистрироваться
+            <Button
+              type='primary'
+              size='medium'
+              htmlType='submit'
+              disabled={loading}
+            >
+              {loading ? 'Загрузка...' : 'Зарегистрироваться'}
             </Button>
           </div>
           {errorText && (

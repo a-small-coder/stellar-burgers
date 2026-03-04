@@ -6,7 +6,8 @@ import {
   registerUser,
   selectUserError,
   selectUserLoading,
-  selectIsAuthenticated
+  selectIsAuthenticated,
+  clearError
 } from '../../services/slices/user';
 import { useForm } from '../../hooks/useForm';
 
@@ -23,6 +24,11 @@ export const Register: FC = () => {
     userName: ''
   });
   const { email, password, userName } = values;
+
+  // сброс страой ошибки
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isAuthenticated && !loading && !error) {
@@ -43,6 +49,7 @@ export const Register: FC = () => {
       password={password}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      loading={loading}
     />
   );
 };
